@@ -48,10 +48,12 @@
     "husky": "^0.14.3",
     "prettier": "^1.16.4",
     "pretty-quick": "^1.10.0",
-    "rimraf": "^2.6.3"
+    "rimraf": "^2.6.3",
+    "webextension-polyfill": "^0.4.0"
   },
   "peerDependencies": {
     "vue": ">=2.0.0",
     "vuex": ">=2.0.0"
-  }
+  },
+  "dependencies": {}
 }
