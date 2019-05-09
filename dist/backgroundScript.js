@@ -38,10 +38,6 @@ var BackgroundScript = /*#__PURE__*/ (function() {
         (this.browser = c),
         (this.settings = d),
         (this.connections = []),
-        this.settings.persistentStates.length &&
-          this.browser.getPersistentStates().then(function(a) {
-            null !== a && e.store.replaceState(_objectSpread({}, e.store.state, (0, _utils.filterObject)(a, e.settings.persistentStates)));
-          }),
         this.store.subscribe(function(a) {
           // Send mutation to connections pool
           for (var b = e.connections.length - 1; 0 <= b; b--) {
@@ -55,7 +51,14 @@ var BackgroundScript = /*#__PURE__*/ (function() {
         }),
         c.handleConnection(function(a) {
           e.onConnection(a);
-        });
+        }),
+        this.settings.persistentStates.length &&
+          this.browser.getPersistentStates().then(function(a) {
+            if (null !== a) {
+              e.store.replaceState(_objectSpread({}, e.store.state, (0, _utils.filterObject)(a, e.settings.persistentStates)));
+              for (var b = e.connections.length - 1; 0 <= b; b--) e.connections[b].postMessage({ type: '@@STORE_INITIAL_STATE', data: e.store.state });
+            }
+          });
     }
     return (
       _createClass(a, [
@@ -68,7 +71,7 @@ var BackgroundScript = /*#__PURE__*/ (function() {
             }),
               (a.receivedMutations = []),
               a.onMessage.addListener(function(c) {
-                b.onMessage(a, c);
+                return b.onMessage(a, c), !0;
               }),
               this.connections.push(a),
               a.postMessage({ type: '@@STORE_INITIAL_STATE', data: this.store.state });

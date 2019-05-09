@@ -7,6 +7,8 @@ import BackgroundScript from './backgroundScript';
 import Browser from './browser';
 import ContentScript from './contentScript';
 
+const browserProxy = require('webextension-polyfill');
+
 var defaultOptions = {
   connectionName: 'vuex-webextensions',
   persistentStates: []
@@ -23,7 +25,7 @@ export default function(opt) {
     ...opt
   };
 
-  const browser = new Browser();
+  const browser = new Browser(browserProxy);
 
   return function(str) {
     // Get type of script and initialize connection

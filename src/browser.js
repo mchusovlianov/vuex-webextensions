@@ -6,16 +6,14 @@
  *  and offer crossbrowser compatibility
  */
 
-var browser = require('webextension-polyfill');
-
 class Browser {
-  constructor() {
-    this.browser = null;
+  constructor(browser) {
+    this.browser = browser;
   }
 
   isBackgroundScript(script) {
     return new Promise((resolve) => {
-      browser.runtime.getBackgroundPage().then((backgroundPage) => resolve(script === backgroundPage));
+      this.browser.runtime.getBackgroundPage().then((backgroundPage) => resolve(script === backgroundPage));
 
       return false;
     });
@@ -23,7 +21,7 @@ class Browser {
 
   getPersistentStates() {
     return new Promise((resolve, reject) => {
-      browser.storage.local
+      this.browser.storage.local
         .get('@@vwe-persistence')
         .then((data) => {
           if (data['@@vwe-persistence']) {
@@ -41,7 +39,7 @@ class Browser {
   }
 
   savePersistentStates(datas) {
-    browser.storage.local
+    this.browser.storage.local
       .set({
         '@@vwe-persistence': datas
       })
@@ -51,11 +49,11 @@ class Browser {
   }
 
   handleConnection(callback) {
-    return browser.runtime.onConnect.addListener(callback);
+    return this.browser.runtime.onConnect.addListener(callback);
   }
 
   connectToBackground(connectionName) {
-    return browser.runtime.connect({
+    return this.browser.runtime.connect({
       name: connectionName
     });
   }

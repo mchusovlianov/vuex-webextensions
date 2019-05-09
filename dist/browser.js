@@ -16,20 +16,20 @@ function _createClass(a, b, c) {
  *
  *  Custom class to apply polyfills without dependencies
  *  and offer crossbrowser compatibility
- */ var browser = require('webextension-polyfill'),
-  Browser = /*#__PURE__*/ (function() {
-    function a() {
-      _classCallCheck(this, a), (this.browser = null);
+ */ var Browser = /*#__PURE__*/ (function() {
+    function a(b) {
+      _classCallCheck(this, a), (this.browser = b);
     }
     return (
       _createClass(a, [
         {
           key: 'isBackgroundScript',
-          value: function b(a) {
-            return new Promise(function(b) {
+          value: function c(a) {
+            var b = this;
+            return new Promise(function(c) {
               return (
-                browser.runtime.getBackgroundPage().then(function(c) {
-                  return b(a === c);
+                b.browser.runtime.getBackgroundPage().then(function(b) {
+                  return c(a === b);
                 }),
                 !1
               );
@@ -38,16 +38,17 @@ function _createClass(a, b, c) {
         },
         {
           key: 'getPersistentStates',
-          value: function a() {
-            return new Promise(function(a, b) {
+          value: function b() {
+            var a = this;
+            return new Promise(function(b, c) {
               return (
-                browser.storage.local
+                a.browser.storage.local
                   .get('@@vwe-persistence')
-                  .then(function(b) {
-                    return b['@@vwe-persistence'] ? a(b['@@vwe-persistence']) : a(null);
+                  .then(function(a) {
+                    return a['@@vwe-persistence'] ? b(a['@@vwe-persistence']) : b(null);
                   })
                   .catch(function(a) {
-                    b(a);
+                    c(a);
                   }),
                 !1
               );
@@ -57,7 +58,7 @@ function _createClass(a, b, c) {
         {
           key: 'savePersistentStates',
           value: function b(a) {
-            browser.storage.local.set({ '@@vwe-persistence': a }).catch(function() {
+            this.browser.storage.local.set({ '@@vwe-persistence': a }).catch(function() {
               throw new Error("Vuex WebExtensions: Can't write persistent states to local storage. Did you grant storage permission to your WebExtension?");
             });
           }
@@ -65,13 +66,13 @@ function _createClass(a, b, c) {
         {
           key: 'handleConnection',
           value: function b(a) {
-            return browser.runtime.onConnect.addListener(a);
+            return this.browser.runtime.onConnect.addListener(a);
           }
         },
         {
           key: 'connectToBackground',
           value: function b(a) {
-            return browser.runtime.connect({ name: a });
+            return this.browser.runtime.connect({ name: a });
           }
         }
       ]),

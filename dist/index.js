@@ -25,13 +25,14 @@ function _objectSpread(a) {
 function _defineProperty(a, b, c) {
   return b in a ? Object.defineProperty(a, b, { value: c, enumerable: !0, configurable: !0, writable: !0 }) : (a[b] = c), a;
 }
-var defaultOptions = { connectionName: 'vuex-webextensions', persistentStates: [] };
+var browserProxy = require('webextension-polyfill'),
+  defaultOptions = { connectionName: 'vuex-webextensions', persistentStates: [] };
 function _default(a) {
   if ('undefined' == typeof window)
     // This allows authors to unit test more easily
     return function() {}; // eslint-disable-line no-empty-function
   var b = _objectSpread({}, defaultOptions, a),
-    c = new _browser.default();
+    c = new _browser.default(browserProxy);
   return function(a) {
     // Get type of script and initialize connection
     c.isBackgroundScript(window).then(function(d) {

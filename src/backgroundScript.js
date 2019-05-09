@@ -12,18 +12,6 @@ class BackgroundScript {
     this.settings = settings;
     this.connections = [];
 
-    // Restore persistent state datas from localstorage
-    if (this.settings.persistentStates.length) {
-      this.browser.getPersistentStates().then((savedStates) => {
-        if (savedStates !== null) {
-          this.store.replaceState({
-            ...this.store.state,
-            ...filterObject(savedStates, this.settings.persistentStates)
-          });
-        }
-      });
-    }
-
     // Hook mutations
     this.store.subscribe((mutation) => {
       // Send mutation to connections pool
@@ -51,6 +39,25 @@ class BackgroundScript {
     browser.handleConnection((connection) => {
       this.onConnection(connection);
     });
+
+    // Restore persistent state datas from localstorage
+    if (this.settings.persistentStates.length) {
+      this.browser.getPersistentStates().then((savedStates) => {
+        if (savedStates !== null) {
+          this.store.replaceState({
+            ...this.store.state,
+            ...filterObject(savedStates, this.settings.persistentStates)
+          });
+
+          for (var i = this.connections.length - 1; i >= 0; i--) {
+            this.connections[i].postMessage({
+              type: '@@STORE_INITIAL_STATE',
+              data: this.store.state
+            });
+          }
+        }
+      });
+    }
   }
 
   onConnection(connection) {
@@ -65,11 +72,12 @@ class BackgroundScript {
     // Listen to messages
     connection.onMessage.addListener((message) => {
       this.onMessage(connection, message);
+
+      return true;
     });
 
     // Add to connections pool
     this.connections.push(connection);
-
     // Send current state
     connection.postMessage({
       type: '@@STORE_INITIAL_STATE',

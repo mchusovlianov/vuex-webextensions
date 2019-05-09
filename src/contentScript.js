@@ -17,11 +17,14 @@ class ContentScript {
     this.pendingMutations = [];
 
     // Connect to background script
+
     this.connection = browser.connectToBackground(`${this.settings.connectionName}_${this.scriptId}`);
 
     // Listen for messages
     this.connection.onMessage.addListener((message) => {
       this.onMessage(message);
+
+      return true;
     });
 
     // Hook mutations

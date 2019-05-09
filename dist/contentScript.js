@@ -29,7 +29,7 @@ function _createClass(a, b, c) {
         (this.pendingMutations = []),
         (this.connection = c.connectToBackground(''.concat(this.settings.connectionName, '_').concat(this.scriptId))),
         this.connection.onMessage.addListener(function(a) {
-          e.onMessage(a);
+          return e.onMessage(a), !0;
         }),
         this.store.subscribe(function(a) {
           e.hookMutation(a);
