@@ -56,6 +56,8 @@ class BackgroundScript {
             });
           }
         }
+
+        this.store.commit('setIsStateLoaded', true);
       });
     }
   }

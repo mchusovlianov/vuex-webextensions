@@ -58,6 +58,7 @@ var BackgroundScript = /*#__PURE__*/ (function() {
               e.store.replaceState(_objectSpread({}, e.store.state, (0, _utils.filterObject)(a, e.settings.persistentStates)));
               for (var b = e.connections.length - 1; 0 <= b; b--) e.connections[b].postMessage({ type: '@@STORE_INITIAL_STATE', data: e.store.state });
             }
+            e.store.commit('setIsStateLoaded', !0);
           });
     }
     return (
